@@ -1,6 +1,8 @@
 
 const mainElement = document.getElementById('main');
-
+const selectElement = document.getElementById('select')
+const sugarlessElement = document.getElementById('sugarlessCheck')
+const textSearchElement = document.getElementById('textSearch')
 
 
 const elements = [
@@ -61,8 +63,9 @@ const elements = [
 ];
 
 
-const printElements = ()=>{
-    elements.forEach(element=>{
+const printElements = (array)=>{
+    mainElement.innerHTML = ''
+    array.forEach(element=>{
         const fragment = document.createDocumentFragment();
         const mainBox = document.createElement('div');
         mainBox.classList.add('box');
@@ -86,6 +89,41 @@ const printElements = ()=>{
         mainElement.append(fragment);
     });
 };
+printElements(elements);
+
+const getValue = (event) =>{
+    const valor = event.target.value;
+    if(valor === 'default'){
+        printElements(elements);
+    }else if(valor === 'name'){
+        orderElements = elements.sort((a,b)=> a.localeCompare(b));
+        printElements(orderElements);
+    }else{
+        orderNumberElements = elements.sort((a,b)=> a.price-b.price);
+        printElements(orderNumberElements);
+    };
+    //como hacer este filtro
+}
+
+const sugarlessFilter = ()=>{
+    if (sugarlessElement.checked) {
+        const sugarless = elements.filter(user => user.sugarless===true);
+        printElements(sugarless);
+    } else {
+        printElements(elements);
+    }
+}
+
+const filterName = (event)=>{
+    const characters = event.target.value.toLowerCase();
+    const resultadosFiltrados = elements.filter(item => {
+        return item.name.toLowerCase().includes(characters); 
+    });
+
+    printElements(resultadosFiltrados);
+}
 
 
-printElements();
+selectElement.addEventListener('change',getValue);
+sugarlessElement.addEventListener('change',sugarlessFilter);
+textSearchElement.addEventListener('input',filterName);
